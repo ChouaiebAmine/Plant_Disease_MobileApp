@@ -4,7 +4,8 @@ Thumbs.db
 *.pyc
 /Plant_Disease_Detection.code-workspace
 models/*.h5
-/PlantDiseaseApp/backend/models/
+models/*.tflite
+/PlantDiseaseApp/backend/models/*.h5
 PlantDiseaseApp.zip
 plant-disease-detection-app.zip
 *.h5
