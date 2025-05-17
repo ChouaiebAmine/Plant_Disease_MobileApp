@@ -1,0 +1,5 @@
+outs:
+- md5: d4676fb8f2454f1848fa7cc894945ddb
+  size: 330
+  hash: md5
+  path: Plant_Disease_Detection.code-workspace

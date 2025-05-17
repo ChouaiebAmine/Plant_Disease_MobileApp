@@ -1,0 +1,6 @@
+{
+  "dependencies": {
+    "expo-camera": "^16.0.18",
+    "tsx-to-jsx": "^0.0.4"
+  }
+}

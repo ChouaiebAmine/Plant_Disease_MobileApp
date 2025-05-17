@@ -1,0 +1,17 @@
+{
+  "extends": "expo/tsconfig.base",
+  "compilerOptions": {
+    "strict": true,
+    "paths": {
+      "@/*": [
+        "./*"
+      ]
+    }
+  },
+  "include": [
+    "**/*.ts",
+    "**/*.tsx",
+    ".expo/types/**/*.ts",
+    "expo-env.d.ts"
+, "app/screens/diagnosis-result.jsx", "app/(tabs)/camera.jsx", "app/screens/diagnosis.jsx", "app/(tabs)/_layout.jsx", "app/(tabs)/blog.jsx", "app/(tabs)/index.jsx", "app/(tabs)/menu.jsx", "app/(tabs)/search.jsx", "app/_layout.jsx", "app/+not-found.jsx", "app/theme/colors.js", "constants/Colors.jsx"  ]
+}

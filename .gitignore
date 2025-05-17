@@ -1,0 +1,20 @@
+data/
+.DS_Store
+Thumbs.db
+*.pyc
+/Plant_Disease_Detection.code-workspace
+models/
+/PlantDiseaseApp/backend/models/
+PlantDiseaseApp.zip
+plant-disease-detection-app.zip
+*.h5
+/PlantDiseaseApp/components
+/notebooks/checkpoints
+
+# Ignore train folder
+data/train/
+
+# Ignore logs folder
+/logs/
+logs/
+node_modules/
