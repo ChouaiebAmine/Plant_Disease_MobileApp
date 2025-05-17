@@ -3,7 +3,7 @@ data/
 Thumbs.db
 *.pyc
 /Plant_Disease_Detection.code-workspace
-models/
+models/*.h5
 /PlantDiseaseApp/backend/models/
 PlantDiseaseApp.zip
 plant-disease-detection-app.zip
