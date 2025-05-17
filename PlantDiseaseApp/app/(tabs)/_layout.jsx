@@ -63,10 +63,17 @@ export default function TabLayout() {
         }}
       />
       <Tabs.Screen
-        name="LoginScreen" // (tabs)/menu.jsx
+        name="LoginScreen" 
         options={{
           title: "Login",
-          
+          href: null
+        }}
+      />
+      <Tabs.Screen
+        name="SignupScreen" 
+        options={{
+          title: "Login",
+          href: null
         }}
       />
     </Tabs>

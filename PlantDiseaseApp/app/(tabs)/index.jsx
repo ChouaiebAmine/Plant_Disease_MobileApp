@@ -32,6 +32,7 @@ export default function MyPlantsScreen() {
     setError(null);
     try {
       const history = await apiService.getUserDiagnoses(); // Fetch from backend
+      console.log("Diagnosis history loaded:", history);
       setDiagnosisHistory(history || []);
     } catch (e) {
       console.error("Failed to load diagnosis history:", e);
@@ -64,8 +65,8 @@ export default function MyPlantsScreen() {
           onPress: async () => {
             try {
               setLoading(true);
-              // Assuming you will add a `clearUserDiagnoses` method to apiService and backend
-              // For now, let's simulate or comment out until backend endpoint is ready
+
+              // for now, let's simulate or comment out until backend endpoint is ready
               // await apiService.clearUserDiagnoses(); 
               // For demonstration, we'll just clear it locally and log a message
               console.warn("Backend endpoint for clearing user-specific history not yet implemented. Clearing locally for now.");
@@ -106,20 +107,31 @@ export default function MyPlantsScreen() {
   }
 
   const renderHistoryItem = ({ item }) => {
-    const healthStatus = item.isHealthy ? "Healthy" : item.diseaseName || "Needs Attention";
+    // Use the correct property names from the backend model
+    const healthStatus = item.isHealthy ? "Healthy" : (item.disease || "Needs Attention");
     const diagnosisDate = formatDate(item.diagnosedAt || item.createdAt); // Use createdAt if diagnosedAt not present
 
     return (
-      <TouchableOpacity style={styles.plantCard} onPress={() => router.push({ pathname: "/diagnosis-result", params: { imageUri: item.imageUrl, fromHistory: true, diagnosisId: item._id }})}>
+      <TouchableOpacity 
+        style={styles.plantCard} 
+        onPress={() => router.push({ 
+          pathname: "/diagnosis-result", 
+          params: { 
+            imageUri: item.imageUri, 
+            fromHistory: true, 
+            diagnosisId: item._id 
+          }
+        })}
+      >
         <Image
-          source={{ uri: item.imageUrl }}
+          source={{ uri: item.imageUri }}
           style={styles.plantImage}
           resizeMode="cover"
         />
         <View style={styles.plantInfo}>
-          <Text style={styles.plantName}>{item.plantName || "Unknown Plant"}</Text>
+          <Text style={styles.plantName}>{item.plant || "Unknown Plant"}</Text>
           <Text style={styles.plantSpecies}>
-            {item.isHealthy ? "Detected as Healthy" : item.diseaseName || "Disease Not Specified"}
+            {item.isHealthy ? "Detected as Healthy" : (item.disease || "Disease Not Specified")}
           </Text>
           <View style={styles.statusContainer}>
             <View
@@ -345,4 +357,3 @@ const styles = StyleSheet.create({
     fontSize: 16,
   },
 });
-

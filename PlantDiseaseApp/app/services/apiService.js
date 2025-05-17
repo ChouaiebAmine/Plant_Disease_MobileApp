@@ -123,6 +123,22 @@ const apiService = {
       return []; 
     }
   },
+  
+  // Alias for getDiagnosisHistory - used by Diagnosis History screen
+  getUserDiagnoses: async () => {
+    try {
+      console.log("Fetching user diagnoses from:", `${API_BASE_URL}/diagnoses`);
+      const response = await apiClient.get(`/diagnoses`);
+      console.log("Get User Diagnoses Response:", response.data);
+      return response.data; // Return the array of diagnosis history
+    } catch (error) {
+      console.error(
+        "Error in apiService.getUserDiagnoses:",
+        error.response ? JSON.stringify(error.response.data, null, 2) : error.message
+      );
+      return []; 
+    }
+  },
 
   // --- End Diagnosis History API Calls ---
 
