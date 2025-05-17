@@ -19,3 +19,4 @@ data/train/
 /logs/
 logs/
 node_modules/
+.env

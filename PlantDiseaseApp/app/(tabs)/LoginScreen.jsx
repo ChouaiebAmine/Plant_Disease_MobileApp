@@ -1,32 +1,63 @@
 import React, { useState } from "react";
-import { View, Text, TextInput, TouchableOpacity, StyleSheet, Alert } from "react-native";
+import { View, Text, TextInput, TouchableOpacity, StyleSheet, Alert, Platform } from "react-native";
 import { useAuth } from "../contexts/AuthContext"; 
 import { useRouter } from "expo-router";
 
 const LoginScreen = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [errorMessage, setErrorMessage] = useState("");
   const { signIn } = useAuth();
   const router = useRouter();
 
   const handleLogin = async () => {
+    // Clear previous error messages
+    setErrorMessage("");
+    
+    // Validate inputs
     if (!email || !password) {
-      Alert.alert("Error", "Please enter both email and password.");
+      setErrorMessage("Please enter both email and password.");
+      // Use Alert for native platforms
+      if (Platform.OS !== 'web') {
+        Alert.alert("Error", "Please enter both email and password.");
+      }
       return;
     }
+    
     try {
       await signIn(email, password);
-      Alert.alert("Success", "Logged in successfully!");
+      
+      // Success message
+      if (Platform.OS !== 'web') {
+        Alert.alert("Success", "Logged in successfully!");
+      } else {
+        setErrorMessage(""); // Clear any error messages
+      }
+      
       router.replace("/(tabs)/index"); 
     } catch (error) {
       console.error("Login failed:", error);
-      Alert.alert("Login Failed", error.message || "An unexpected error occurred. Please try again.");
+      const errorMsg = error.message || "An unexpected error occurred. Please try again.";
+      setErrorMessage(errorMsg);
+      
+      // Use Alert for native platforms
+      if (Platform.OS !== 'web') {
+        Alert.alert("Login Failed", errorMsg);
+      }
     }
   };
 
   return (
     <View style={styles.container}>
       <Text style={styles.title}>Login</Text>
+      
+      {/* Error message display */}
+      {errorMessage ? (
+        <View style={styles.errorContainer}>
+          <Text style={styles.errorText}>{errorMessage}</Text>
+        </View>
+      ) : null}
+      
       <TextInput
         style={styles.input}
         placeholder="Email"
@@ -68,6 +99,19 @@ const styles = StyleSheet.create({
     textAlign: "center",
     color: "#FFFFFF", 
   },
+  errorContainer: {
+    backgroundColor: "rgba(255, 0, 0, 0.1)",
+    borderRadius: 5,
+    padding: 10,
+    marginBottom: 15,
+    borderWidth: 1,
+    borderColor: "#FF0000",
+  },
+  errorText: {
+    color: "#FF0000",
+    textAlign: "center",
+    fontSize: 14,
+  },
   input: {
     height: 50, 
     borderColor: "#555555", 
@@ -105,4 +149,3 @@ const styles = StyleSheet.create({
 });
 
 export default LoginScreen;
-

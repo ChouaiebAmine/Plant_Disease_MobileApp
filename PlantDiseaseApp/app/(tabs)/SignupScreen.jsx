@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { View, Text, TextInput, TouchableOpacity, StyleSheet, Alert } from "react-native";
+import { View, Text, TextInput, TouchableOpacity, StyleSheet, Alert, Platform } from "react-native";
 import { useAuth } from "../contexts/AuthContext"; 
 import { useRouter } from "expo-router";
 
@@ -7,31 +7,67 @@ const SignupScreen = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
+  const [errorMessage, setErrorMessage] = useState("");
   const { signUp } = useAuth();
   const router = useRouter();
 
   const handleSignup = async () => {
+    // Clear previous error messages
+    setErrorMessage("");
+    
+    // Validate inputs
     if (!email || !password || !confirmPassword) {
-      Alert.alert("Error", "Please fill in all fields.");
+      setErrorMessage("Please fill in all fields.");
+      // Use Alert for native platforms
+      if (Platform.OS !== 'web') {
+        Alert.alert("Error", "Please fill in all fields.");
+      }
       return;
     }
+    
     if (password !== confirmPassword) {
-      Alert.alert("Error", "Passwords do not match.");
+      setErrorMessage("Passwords do not match.");
+      // Use Alert for native platforms
+      if (Platform.OS !== 'web') {
+        Alert.alert("Error", "Passwords do not match.");
+      }
       return;
     }
+    
     try {
       await signUp(email, password);
-      Alert.alert("Success", "Account created successfully! Please log in.");
+      
+      // Success message
+      if (Platform.OS !== 'web') {
+        Alert.alert("Success", "Account created successfully! Please log in.");
+      } else {
+        setErrorMessage(""); // Clear any error messages
+      }
+      
       router.replace("/LoginScreen"); 
     } catch (error) {
       console.error("Signup failed:", error);
-      Alert.alert("Signup Failed", error.message || "An unexpected error occurred. Please try again.");
+      const errorMsg = error.message || "An unexpected error occurred. Please try again.";
+      setErrorMessage(errorMsg);
+      
+      // Use Alert for native platforms
+      if (Platform.OS !== 'web') {
+        Alert.alert("Signup Failed", errorMsg);
+      }
     }
   };
 
   return (
     <View style={styles.container}>
       <Text style={styles.title}>Sign Up</Text>
+      
+      {/* Error message display */}
+      {errorMessage ? (
+        <View style={styles.errorContainer}>
+          <Text style={styles.errorText}>{errorMessage}</Text>
+        </View>
+      ) : null}
+      
       <TextInput
         style={styles.input}
         placeholder="Email"
@@ -61,7 +97,7 @@ const SignupScreen = () => {
         <Text style={styles.buttonText}>Sign Up</Text>
       </TouchableOpacity>
       <TouchableOpacity style={styles.buttonTransparent} onPress={() => router.push("/LoginScreen")}>
-        <Text style={styles.buttonTextTransparent}>Already have an account?Login.</Text>
+        <Text style={styles.buttonTextTransparent}>Already have an account? Login</Text>
       </TouchableOpacity>
     </View>
   );
@@ -80,6 +116,19 @@ const styles = StyleSheet.create({
     marginBottom: 30,
     textAlign: "center",
     color: "#FFFFFF", 
+  },
+  errorContainer: {
+    backgroundColor: "rgba(255, 0, 0, 0.1)",
+    borderRadius: 5,
+    padding: 10,
+    marginBottom: 15,
+    borderWidth: 1,
+    borderColor: "#FF0000",
+  },
+  errorText: {
+    color: "#FF0000",
+    textAlign: "center",
+    fontSize: 14,
   },
   input: {
     height: 50,
@@ -118,4 +167,3 @@ const styles = StyleSheet.create({
 });
 
 export default SignupScreen;
-

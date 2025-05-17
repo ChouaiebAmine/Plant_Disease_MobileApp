@@ -1,3 +1,4 @@
+require('dotenv').config({ path: '../.env' });
 const express = require("express");
 const cors = require("cors");
 
@@ -5,7 +6,11 @@ const bodyParser = require("body-parser");
 const morgan = require("morgan");
 
 const mongoose = require("mongoose");
-require("dotenv").config();
+
+// Log environment variables for debugging
+console.log("Environment variables loaded:");
+console.log("JWT_SECRET exists:", !!process.env.JWT_SECRET);
+console.log("MONGODB_URI exists:", !!process.env.MONGODB_URI);
 
 // import routes
 const apiRoutes = require("./routes/api");
@@ -20,7 +25,7 @@ const PORT = process.env.PORT || 5000;
 const MONGODB_URI = process.env.MONGODB_URI;
 
 if (!MONGODB_URI) {
-  console.error(" MONGODB_URI is not defined in .env file");
+  console.error("MONGODB_URI is not defined in .env file");
   process.exit(1); 
 }
 
@@ -57,4 +62,3 @@ app.listen(PORT, "0.0.0.0", () => {
 });
 
 module.exports = app;
-

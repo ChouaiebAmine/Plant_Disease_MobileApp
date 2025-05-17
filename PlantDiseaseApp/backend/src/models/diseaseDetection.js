@@ -2,7 +2,7 @@ const axios = require("axios");
 
 
 // Flask API URL 
-const FLASK_API_URL = "http://127.0.0.1:5001"; //Flask runs on the same machine as Express
+const FLASK_API_URL = "http://127.0.0.1:5001"; 
 
 /**
  * Detect plant disease from a base64 image string by calling the Python API

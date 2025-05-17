@@ -1,92 +1,27 @@
-const express = require("express");
-const router = express.Router();
-const bcrypt = require("bcryptjs");
-const jwt = require("jsonwebtoken");
-require("dotenv").config({ path: "./.env" }); 
+require('dotenv').config();
+const jwt = require('jsonwebtoken');
 
-const User = require("../../models/User");
+module.exports = function(req, res, next) {
+  // Get token from header
+  const token = req.header('Authorization')?.replace('Bearer ', '');
 
-router.post("/register", async (req, res) => {
-  const { email, password } = req.body;
-
-  try {
-
-    let user = await User.findOne({ email });
-    if (user) {
-      return res.status(400).json({ errors: [{ msg: "User already exists" }] });
-    }
-
-    //create new user instance
-    user = new User({
-      email,
-      password,
-    });
-
-    // encrypt password
-    const salt = await bcrypt.genSalt(10);
-    user.password = await bcrypt.hash(password, salt);
-
-    // Save user to database
-    await user.save();
-
-    // Return jsonwebtoken
-    const payload = {
-      user: {
-        id: user.id, // mongoose 
-      },
-    };
-
-    jwt.sign(
-      payload,
-      process.env.JWT_SECRET,
-      { expiresIn: 3600 }, // expires in 1 hour
-      (err, token) => {
-        if (err) throw err;
-        res.json({ token });
-      }
-    );
-  } catch (err) {
-    console.error(err.message);
-    res.status(500).send("Server error");
+  // Check if no token
+  if (!token) {
+    return res.status(401).json({ message: 'No token, authorization denied' });
   }
-});
 
-router.post("/login", async (req, res) => {
-  const { email, password } = req.body;
-
+  // Verify token
   try {
-    // Check if user exists
-    let user = await User.findOne({ email });
-    if (!user) {
-      return res.status(400).json({ errors: [{ msg: "Invalid Credentials" }] });
-    }
-
-    // Compare password
-    const isMatch = await bcrypt.compare(password, user.password);
-    if (!isMatch) {
-      return res.status(400).json({ errors: [{ msg: "Invalid Credentials" }] });
-    }
-
-    // Return jsonwebtoken
-    const payload = {
-      user: {
-        id: user.id,
-      },
-    };
-
-    jwt.sign(
-      payload,
-      process.env.JWT_SECRET,
-      { expiresIn: 3600 }, 
-      (err, token) => {
-        if (err) throw err;
-        res.json({ token });
-      }
-    );
+    // Log JWT_SECRET status for debugging
+    console.log('JWT_SECRET exists:', !!process.env.JWT_SECRET);
+    
+    const decoded = jwt.verify(token, process.env.JWT_SECRET);
+    
+    // Add user from payload to request
+    req.user = decoded.user;
+    next();
   } catch (err) {
-    console.error(err.message);
-    res.status(500).send("Server error");
+    console.error('Token verification error:', err.message);
+    res.status(401).json({ message: 'Token is not valid' });
   }
-});
-
-module.exports = router;
+};

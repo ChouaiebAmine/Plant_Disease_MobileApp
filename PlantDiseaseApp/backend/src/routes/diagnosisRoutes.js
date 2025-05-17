@@ -1,9 +1,11 @@
 const express = require("express");
 const router = express.Router();
 const Diagnosis = require("../models/Diagnosis");
+const auth = require("./auth");
 
 // POST /api/diagnoses - Save a new diagnosis result
-router.post("/", async (req, res) => {
+// Protected route - requires authentication
+router.post("/", auth, async (req, res) => {
   try {
     const {
       imageUri,
@@ -22,6 +24,7 @@ router.post("/", async (req, res) => {
         return res.status(400).json({ message: "Missing required fields for diseased plant: disease, confidence" });
     }
 
+    // Create new diagnosis with userId from authenticated user
     const newDiagnosis = new Diagnosis({
       imageUri,
       isHealthy,
@@ -29,6 +32,7 @@ router.post("/", async (req, res) => {
       disease: isHealthy ? undefined : disease,
       confidence: isHealthy ? undefined : confidence,
       treatment: treatment || [], // Ensure treatment is an array
+      userId: req.user.id, // Add userId from authenticated user
       // diagnosedAt is set by default in the schema
     });
 
@@ -40,11 +44,12 @@ router.post("/", async (req, res) => {
   }
 });
 
-// GET /api/diagnoses - Get all diagnosis history (consider adding user filtering later)
-router.get("/", async (req, res) => {
+// GET /api/diagnoses - Get all diagnosis history for the authenticated user
+// Protected route - requires authentication
+router.get("/", auth, async (req, res) => {
   try {
-    // Fetch diagnoses, sort by date descending
-    const diagnoses = await Diagnosis.find().sort({ diagnosedAt: -1 });
+    // Fetch diagnoses for the authenticated user only, sort by date descending
+    const diagnoses = await Diagnosis.find({ userId: req.user.id }).sort({ diagnosedAt: -1 });
     res.status(200).json(diagnoses);
   } catch (error) {
     console.error("Error fetching diagnosis history:", error);

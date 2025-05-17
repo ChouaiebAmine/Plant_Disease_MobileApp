@@ -7,8 +7,7 @@ const AuthContext = createContext();
 export const AuthProvider = ({ children }) => {
   const [userToken, setUserToken] = useState(null);
   const [isLoading, setIsLoading] = useState(true);
-  const [userData, setUserData] = useState(null); // Optional: to store basic user info
-
+  const [userData, setUserData] = useState(null); 
   useEffect(() => {
     const bootstrapAsync = async () => {
       let token;
