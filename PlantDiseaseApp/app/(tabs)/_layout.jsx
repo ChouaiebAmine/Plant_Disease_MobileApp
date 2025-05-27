@@ -16,7 +16,7 @@ export default function TabLayout() {
         
         headerShown: false, 
       }}
-    >
+  >
       <Tabs.Screen
         name="index" 
         options={{
@@ -34,7 +34,7 @@ export default function TabLayout() {
             <Ionicons name="search-outline" size={size} color={color} />
           ),
         }}
-      />
+    />
       <Tabs.Screen
         name="camera" // (tabs)/camera.jsx
         options={{
@@ -44,15 +44,7 @@ export default function TabLayout() {
           ),
         }}
       />
-      <Tabs.Screen
-        name="blog" // (tabs)/blog.jsx
-        options={{
-          title: "Blog",
-          tabBarIcon: ({ color, size }) => (
-            <Ionicons name="book-outline" size={size} color={color} />
-          ),
-        }}
-      />
+
       <Tabs.Screen
         name="menu" // (tabs)/menu.jsx
         options={{

@@ -7,51 +7,111 @@ import {
   FlatList,
   TouchableOpacity,
   Image,
-  ActivityIndicator
+  ActivityIndicator,
+  Modal
 } from "react-native"
 import colors from "../theme/colors"
 
-// Mock data for plants
+plant_img_path='../context'
+
 const PLANTS_DATA = [
   {
     id: "1",
-    name: "Apple",
-    scientificName: "Epipremnum aureum",
-    image:"Plant_Label_Img/Apple.jpg",
+    name: "Tomato",
+    scientificName: "Solanum lycopersicum",
+    image: "Plant_Label_Img/Tomato.jpg",
+    diseases: ['Bacterial_spot', 'Early_blight', 'Late_blight', 'Leaf_Mold', 'Septoria_leaf_spot', 'Spider_mites Two-spotted_spider_mite', 'Target_Spot', 'Tomato_Yellow_Leaf_Curl_Virus', 'Tomato_mosaic_virus', 'healthy']
   },
   {
     id: "2",
-    name: "Blue Berry",
-    scientificName: "Sansevieria trifasciata",
-    image:"Plant_Label_Img/BlueBerry.jpg",  
+    name: "Apple",
+    scientificName: "Malus domestica",
+    image: "Plant_Label_Img/Apple.jpg",
+    diseases: ['Apple_scab', 'Black_rot', 'Cedar_apple_rust', 'healthy']
   },
   {
     id: "3",
-    name: "Aloe Vera",
-    scientificName: "Aloe vera",
-    image:
-      "https://www.thespruce.com/thmb/1g_y9xyi8hLEL4H6tZQXa_xAB_g=/750x0/filters:no_upscale():max_bytes(150000):strip_icc():format(webp)/grow-aloe-vera-1902817-hero-0a8f0bb1b0944469b5e7b7be3196a763.jpg"
+    name: "Corn_(maize)",
+    scientificName: "Zea mays",
+    image: "Plant_Label_Img/Corn.jpg",
+    diseases: ['Cercospora_leaf_spot Gray_leaf_spot', 'Common_rust_', 'Northern_Leaf_Blight', 'healthy']
   },
   {
     id: "4",
-    name: "Peace Lily",
-    scientificName: "Spathiphyllum wallisii",
-    image:
-      "https://www.thespruce.com/thmb/oPvmHXGLLEUXE4RXEHXtL-Uxlao=/750x0/filters:no_upscale():max_bytes(150000):strip_icc():format(webp)/grow-peace-lilies-1902767-hero-31e6b9a2895a4be2ab8c52e6ad4d5c77.jpg"
+    name: "Grape",
+    scientificName: "Vitis vinifera",
+    image: "Plant_Label_Img/Grape.jpg",
+    diseases: ['Black_rot', 'Esca_(Black_Measles)', 'Leaf_blight_(Isariopsis_Leaf_Spot)', 'healthy']
   },
   {
     id: "5",
-    name: "Swiss Cheese Plant",
-    scientificName: "Monstera deliciosa",
-    image:
-      "https://www.thespruce.com/thmb/qrtrVK3yqRYuQyHUZOdQXcNGUBc=/750x0/filters:no_upscale():max_bytes(150000):strip_icc():format(webp)/grow-monstera-deliciosa-swiss-cheese-plant-1902774-hero-0a5a5bb3998f4ae0806c15575ce8c4eb.jpg"
+    name: "Potato",
+    scientificName: "Solanum tuberosum",
+    image: "Plant_Label_Img/Potato.jpg",
+    diseases: ['Early_blight', 'Late_blight', 'healthy']
   },
   {
     id: "6",
-    name: "Corn Plant",
-    scientificName: "Dracaena fragrans",
-    image:
-      "https://www.thespruce.com/thmb/klZBV6Tv1JgdmC2WnrJNL3BgycU=/750x0/filters:no_upscale():max_bytes(150000):strip_icc():format(webp)/grow-dracaena-fragrans-indoors-1902748-hero-c66e2decaf404846b55e636127bfbc3d.jpg"
+    name: "Pepper,_bell",
+    scientificName: "Capsicum annuum",
+    image: "Plant_Label_Img/Pepper.jpg",
+    diseases: ['Bacterial_spot', 'healthy']
+  },
+  {
+    id: "7",
+    name: "Strawberry",
+    scientificName: "Fragaria × ananassa",
+    image: "Plant_Label_Img/Strawberry.jpg",
+    diseases: ['Leaf_scorch', 'healthy']
+  },
+  {
+    id: "8",
+    name: "Peach",
+    scientificName: "Prunus persica",
+    image: "Plant_Label_Img/Peach.jpg",
+    diseases: ['Bacterial_spot', 'healthy']
+  },
+  {
+    id: "9",
+    name: "Cherry_(including_sour)",
+    scientificName: "Prunus avium",
+    image: "Plant_Label_Img/Cherry.jpg",
+    diseases: ['Powdery_mildew', 'healthy']
+  },
+  {
+    id: "10",
+    name: "Soybean",
+    scientificName: "Glycine max",
+    image: "Plant_Label_Img/Soybean.jpg",
+    diseases: ['healthy']
+  },
+  {
+    id: "11",
+    name: "Orange",
+    scientificName: "Citrus × sinensis",
+    image: "Plant_Label_Img/Orange.jpg",
+    diseases: ['Haunglongbing_(Citrus_greening)']
+  },
+  {
+    id: "12",
+    name: "Blueberry",
+    scientificName: "Vaccinium corymbosum",
+    image: "Plant_Label_Img/Blueberry.jpg",
+    diseases: ['healthy']
+  },
+  {
+    id: "13",
+    name: "Raspberry",
+    scientificName: "Rubus idaeus",
+    image: "../../Plant_Label_Img/Pepper.jpg",
+    diseases: ['healthy']
+  },
+  {
+    id: "14",
+    name: "Squash",
+    scientificName: "Cucurbita",
+    image: "Plant_Label_Img/Squash.jpg",
+    diseases: ['Powdery_mildew']
   }
 ]
 
@@ -59,6 +119,8 @@ export default function SearchScreen() {
   const [searchQuery, setSearchQuery] = useState("")
   const [plants, setPlants] = useState(PLANTS_DATA)
   const [loading, setLoading] = useState(false)
+  const [modalVisible, setModalVisible] = useState(false)
+  const [selectedPlant, setSelectedPlant] = useState(null)
 
   const filteredPlants = plants.filter(
     plant =>
@@ -66,13 +128,15 @@ export default function SearchScreen() {
       plant.scientificName.toLowerCase().includes(searchQuery.toLowerCase())
   )
 
+  const handlePlantPress = (plant) => {
+    setSelectedPlant(plant)
+    setModalVisible(true)
+  }
+
   const renderPlantItem = ({ item }) => (
     <TouchableOpacity
       style={styles.plantCard}
-      onPress={() => {
-        // In a real app, navigate to plant details
-        console.log(`Selected plant: ${item.name}`)
-      }}
+      onPress={() => handlePlantPress(item)}
     >
       <Image
         source={{ uri: item.image }}
@@ -117,6 +181,37 @@ export default function SearchScreen() {
           }
         />
       )}
+
+      <Modal
+        animationType="slide"
+        transparent={true}
+        visible={modalVisible}
+        onRequestClose={() => setModalVisible(false)}
+      >
+        <View style={styles.modalContainer}>
+          <View style={styles.modalContent}>
+            {selectedPlant && (
+              <>
+                <Text style={styles.modalTitle}>{selectedPlant.name}</Text>
+                <Text style={styles.modalSubtitle}>Available Diseases:</Text>
+                <FlatList
+                  data={selectedPlant.diseases}
+                  renderItem={({ item }) => (
+                    <Text style={styles.diseaseItem}>• {item.replace(/_/g, ' ')}</Text>
+                  )}
+                  keyExtractor={(item, index) => index.toString()}
+                />
+                <TouchableOpacity
+                  style={styles.closeButton}
+                  onPress={() => setModalVisible(false)}
+                >
+                  <Text style={styles.closeButtonText}>Close</Text>
+                </TouchableOpacity>
+              </>
+            )}
+          </View>
+        </View>
+      </Modal>
     </View>
   )
 }
@@ -178,5 +273,48 @@ const styles = StyleSheet.create({
   emptyText: {
     fontSize: 16,
     color: colors.textSecondary
+  },
+  modalContainer: {
+    flex: 1,
+    justifyContent: "center",
+    alignItems: "center",
+    backgroundColor: "rgba(0,0,0,0.6)"
+  },
+  modalContent: {
+    width: "80%",
+    backgroundColor: colors.cardBackground,
+    borderRadius: 12,
+    padding: 20,
+    maxHeight: "70%"
+  },
+  modalTitle: {
+    fontSize: 20,
+    fontWeight: "bold",
+    color: colors.textPrimary,
+    marginBottom: 10,
+    textAlign: "center"
+  },
+  modalSubtitle: {
+    fontSize: 16,
+    fontWeight: "bold",
+    color: colors.textPrimary,
+    marginBottom: 10
+  },
+  diseaseItem: {
+    fontSize: 14,
+    color: colors.textPrimary,
+    marginBottom: 5,
+    paddingLeft: 10
+  },
+  closeButton: {
+    backgroundColor: colors.primary,
+    padding: 12,
+    borderRadius: 8,
+    alignItems: "center",
+    marginTop: 15
+  },
+  closeButtonText: {
+    color: "#fff",
+    fontWeight: "bold"
   }
 })

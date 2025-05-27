@@ -7,7 +7,7 @@ const FLASK_API_URL = "http://127.0.0.1:5001";
 /**
  * Detect plant disease from a base64 image string by calling the Python API
  * @param {string} base64Image -Base64 encoded image string 
- * @returns {Object} -Detection result from Flask API
+ * @returns {Object} 
  */
 const detectDisease = async (base64Image) => {
   try {
@@ -33,7 +33,7 @@ const detectDisease = async (base64Image) => {
     // Return the result directly from Flask API
     return result;
   } catch (error) {
-    console.error("Error calling Flask API in diseaseDetection:", error.response ? error.response.data : error.message);
+    console.error("Error in diseaseDetection:", error.response ? error.response.data : error.message);
 
     // Improved error forwarding
     if (error.response) {
@@ -45,7 +45,7 @@ const detectDisease = async (base64Image) => {
       );
     } else {
       // General error (e.g., network issue connecting to Flask)
-      throw new Error(`Error connecting to Flask API: ${error.message}`);
+      throw new Error(`Error connecting to flask API: ${error.message}`);
     }
   }
 };
