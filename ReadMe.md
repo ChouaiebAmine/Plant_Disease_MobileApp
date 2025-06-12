@@ -50,7 +50,7 @@ npm install express
 ### 1. Place the AI Model
 
 Download the `vgg16_finetuned_model.h5` file and place it in the following directory:
-
+Link: https://www.kaggle.com/models/aminechouaieb/vgg_finetuned.h5/
 ```
 PlantDiseaseApp/backend/models/
 ```
