@@ -7,51 +7,329 @@ import {
   FlatList,
   TouchableOpacity,
   Image,
-  ActivityIndicator
+  ActivityIndicator,
+  Modal
 } from "react-native"
 import colors from "../theme/colors"
 
-// Mock data for plants
+
+//treatments
+const DISEASE_TREATMENTS = {
+  'Apple___Apple_scab': [
+    'Remove and destroy fallen leaves to reduce fungal spores',
+    'Apply fungicides during the growing season, starting at bud break',
+    'Prune trees to improve air circulation',
+    'Plant scab-resistant apple varieties when possible'
+  ],
+  'Apple___Black_rot': [
+    'Prune out dead or diseased branches',
+    'Remove mummified fruits from the tree and ground',
+    'Apply fungicides from bud break until harvest',
+    'Maintain good sanitation in the orchard'
+  ],
+  'Apple___Cedar_apple_rust': [
+    'Remove nearby cedar trees if possible (the alternate host)',
+    'Apply fungicides starting at bud break',
+    'Plant rust-resistant apple varieties',
+    'Remove galls from cedar trees within a quarter-mile radius'
+  ],
+  'Cherry_(including_sour)___Powdery_mildew': [
+    'Apply fungicides at the first sign of disease',
+    'Prune trees to improve air circulation',
+    'Avoid excessive nitrogen fertilization',
+    'Remove and destroy infected plant parts'
+  ],
+  'Corn_(maize)___Cercospora_leaf_spot Gray_leaf_spot': [
+    'Rotate crops with non-host plants',
+    'Plant resistant hybrids',
+    'Apply foliar fungicides',
+    'Practice good field sanitation by plowing under crop residue'
+  ],
+  'Corn_(maize)___Common_rust_': [
+    'Plant rust-resistant corn hybrids',
+    'Apply fungicides early in the season',
+    'Monitor fields regularly for early detection',
+    'Avoid late planting dates'
+  ],
+  'Corn_(maize)___Northern_Leaf_Blight': [
+    'Plant resistant hybrids',
+    'Rotate crops with non-host plants',
+    'Apply fungicides when disease first appears',
+    'Practice good field sanitation'
+  ],
+  'Grape___Black_rot': [
+    'Remove mummified berries and infected leaves',
+    'Apply fungicides from bud break until veraison',
+    'Prune to improve air circulation',
+    'Maintain good canopy management'
+  ],
+  'Grape___Esca_(Black_Measles)': [
+    'Remove and destroy infected vines',
+    'Avoid pruning during wet weather',
+    'Protect pruning wounds with fungicides or sealants',
+    'Maintain vine vigor with proper nutrition and irrigation'
+  ],
+  'Grape___Leaf_blight_(Isariopsis_Leaf_Spot)': [
+    'Apply fungicides preventatively',
+    'Improve air circulation through proper pruning',
+    'Remove infected leaves and destroy them',
+    'Avoid overhead irrigation'
+  ],
+  'Orange___Haunglongbing_(Citrus_greening)': [
+    'Remove and destroy infected trees',
+    'Control the Asian citrus psyllid vector with insecticides',
+    'Plant disease-free nursery stock',
+    'Maintain tree health with proper nutrition'
+  ],
+  'Peach___Bacterial_spot': [
+    'Apply copper-based bactericides early in the growing season',
+    'Prune during dry weather to improve air circulation',
+    'Plant resistant varieties',
+    'Avoid overhead irrigation'
+  ],
+  'Pepper,_bell___Bacterial_spot': [
+    'Use disease-free seeds and transplants',
+    'Apply copper-based bactericides',
+    'Rotate crops with non-host plants',
+    'Avoid working with plants when they are wet'
+  ],
+  'Potato___Early_blight': [
+    'Apply fungicides preventatively',
+    'Practice crop rotation',
+    'Remove volunteer potato plants',
+    'Ensure adequate plant nutrition'
+  ],
+  'Potato___Late_blight': [
+    'Apply fungicides before symptoms appear',
+    'Plant resistant varieties',
+    'Destroy cull piles and volunteer plants',
+    'Harvest tubers after vines have died and the soil is dry'
+  ],
+  'Squash___Powdery_mildew': [
+    'Apply fungicides at the first sign of disease',
+    'Plant resistant varieties',
+    'Provide good air circulation',
+    'Avoid overhead irrigation'
+  ],
+  'Strawberry___Leaf_scorch': [
+    'Remove infected leaves',
+    'Apply fungicides preventatively',
+    'Ensure good air circulation',
+    'Avoid overhead irrigation'
+  ],
+  'Tomato___Bacterial_spot': [
+    'Use disease-free seeds and transplants',
+    'Apply copper-based bactericides',
+    'Rotate crops with non-host plants',
+    'Avoid working with plants when they are wet'
+  ],
+  'Tomato___Early_blight': [
+    'Remove lower infected leaves',
+    'Apply fungicides preventatively',
+    'Mulch around plants',
+    'Ensure adequate plant spacing'
+  ],
+  'Tomato___Late_blight': [
+    'Apply fungicides before symptoms appear',
+    'Remove and destroy infected plants',
+    'Avoid overhead irrigation',
+    'Plant resistant varieties'
+  ],
+  'Tomato___Leaf_Mold': [
+    'Improve air circulation',
+    'Reduce humidity in greenhouses',
+    'Apply fungicides preventatively',
+    'Remove and destroy infected leaves'
+  ],
+  'Tomato___Septoria_leaf_spot': [
+    'Remove infected leaves',
+    'Apply fungicides preventatively',
+    'Practice crop rotation',
+    'Mulch around plants to prevent soil splash'
+  ],
+  'Tomato___Spider_mites Two-spotted_spider_mite': [
+    'Apply miticides or insecticidal soap',
+    'Increase humidity around plants',
+    'Introduce predatory mites',
+    'Regularly spray plants with water to dislodge mites'
+  ],
+  'Tomato___Target_Spot': [
+    'Apply fungicides preventatively',
+    'Improve air circulation',
+    'Remove infected leaves',
+    'Avoid overhead irrigation'
+  ],
+  'Tomato___Tomato_Yellow_Leaf_Curl_Virus': [
+    'Control whitefly vectors with insecticides',
+    'Use reflective mulches to repel whiteflies',
+    'Plant resistant varieties',
+    'Remove and destroy infected plants'
+  ],
+  'Tomato___Tomato_mosaic_virus': [
+    'Remove and destroy infected plants',
+    'Wash hands and tools after handling infected plants',
+    'Control aphid vectors',
+    'Plant resistant varieties'
+  ],
+  'healthy': [
+    'Continue regular maintenance',
+    'Water appropriately for the plant type',
+    'Fertilize as needed',
+    'Monitor for early signs of pests or diseases'
+  ]
+};
+
+//Plant data
 const PLANTS_DATA = [
   {
     id: "1",
-    name: "Apple",
-    scientificName: "Epipremnum aureum",
-    image:"Plant_Label_Img/Apple.jpg",
+    name: "Tomato",
+    scientificName: "Solanum lycopersicum",
+    image: "Plant_Label_Img/Tomato.jpg",
+    diseases: [
+      { name: 'Bacterial_spot', treatmentKey: 'Tomato___Bacterial_spot' },
+      { name: 'Early_blight', treatmentKey: 'Tomato___Early_blight' },
+      { name: 'Late_blight', treatmentKey: 'Tomato___Late_blight' },
+      { name: 'Leaf_Mold', treatmentKey: 'Tomato___Leaf_Mold' },
+      { name: 'Septoria_leaf_spot', treatmentKey: 'Tomato___Septoria_leaf_spot' },
+      { name: 'Spider_mites Two-spotted_spider_mite', treatmentKey: 'Tomato___Spider_mites Two-spotted_spider_mite' },
+      { name: 'Target_Spot', treatmentKey: 'Tomato___Target_Spot' },
+      { name: 'Tomato_Yellow_Leaf_Curl_Virus', treatmentKey: 'Tomato___Tomato_Yellow_Leaf_Curl_Virus' },
+      { name: 'Tomato_mosaic_virus', treatmentKey: 'Tomato___Tomato_mosaic_virus' },
+      { name: 'healthy', treatmentKey: 'healthy' }
+    ]
   },
   {
     id: "2",
-    name: "Blue Berry",
-    scientificName: "Sansevieria trifasciata",
-    image:"Plant_Label_Img/BlueBerry.jpg",  
+    name: "Apple",
+    scientificName: "Malus domestica",
+    image: "/Plant_Label_Img/Apple.jpg",
+    diseases: [
+      { name: 'Apple_scab', treatmentKey: 'Apple___Apple_scab' },
+      { name: 'Black_rot', treatmentKey: 'Apple___Black_rot' },
+      { name: 'Cedar_apple_rust', treatmentKey: 'Apple___Cedar_apple_rust' },
+      { name: 'healthy', treatmentKey: 'healthy' }
+    ]
   },
   {
     id: "3",
-    name: "Aloe Vera",
-    scientificName: "Aloe vera",
-    image:
-      "https://www.thespruce.com/thmb/1g_y9xyi8hLEL4H6tZQXa_xAB_g=/750x0/filters:no_upscale():max_bytes(150000):strip_icc():format(webp)/grow-aloe-vera-1902817-hero-0a8f0bb1b0944469b5e7b7be3196a763.jpg"
+    name: "Corn_(maize)",
+    scientificName: "Zea mays",
+    image: "Plant_Label_Img/Corn.jpg",
+    diseases: [
+      { name: 'Cercospora_leaf_spot Gray_leaf_spot', treatmentKey: 'Corn_(maize)___Cercospora_leaf_spot Gray_leaf_spot' },
+      { name: 'Common_rust_', treatmentKey: 'Corn_(maize)___Common_rust_' },
+      { name: 'Northern_Leaf_Blight', treatmentKey: 'Corn_(maize)___Northern_Leaf_Blight' },
+      { name: 'healthy', treatmentKey: 'healthy' }
+    ]
   },
   {
     id: "4",
-    name: "Peace Lily",
-    scientificName: "Spathiphyllum wallisii",
-    image:
-      "https://www.thespruce.com/thmb/oPvmHXGLLEUXE4RXEHXtL-Uxlao=/750x0/filters:no_upscale():max_bytes(150000):strip_icc():format(webp)/grow-peace-lilies-1902767-hero-31e6b9a2895a4be2ab8c52e6ad4d5c77.jpg"
+    name: "Grape",
+    scientificName: "Vitis vinifera",
+    image: "Plant_Label_Img/Grape.jpg",
+    diseases: [
+      { name: 'Black_rot', treatmentKey: 'Grape___Black_rot' },
+      { name: 'Esca_(Black_Measles)', treatmentKey: 'Grape___Esca_(Black_Measles)' },
+      { name: 'Leaf_blight_(Isariopsis_Leaf_Spot)', treatmentKey: 'Grape___Leaf_blight_(Isariopsis_Leaf_Spot)' },
+      { name: 'healthy', treatmentKey: 'healthy' }
+    ]
   },
   {
     id: "5",
-    name: "Swiss Cheese Plant",
-    scientificName: "Monstera deliciosa",
-    image:
-      "https://www.thespruce.com/thmb/qrtrVK3yqRYuQyHUZOdQXcNGUBc=/750x0/filters:no_upscale():max_bytes(150000):strip_icc():format(webp)/grow-monstera-deliciosa-swiss-cheese-plant-1902774-hero-0a5a5bb3998f4ae0806c15575ce8c4eb.jpg"
+    name: "Potato",
+    scientificName: "Solanum tuberosum",
+    image: "Plant_Label_Img/Potato.jpg",
+    diseases: [
+      { name: 'Early_blight', treatmentKey: 'Potato___Early_blight' },
+      { name: 'Late_blight', treatmentKey: 'Potato___Late_blight' },
+      { name: 'healthy', treatmentKey: 'healthy' }
+    ]
   },
   {
     id: "6",
-    name: "Corn Plant",
-    scientificName: "Dracaena fragrans",
-    image:
-      "https://www.thespruce.com/thmb/klZBV6Tv1JgdmC2WnrJNL3BgycU=/750x0/filters:no_upscale():max_bytes(150000):strip_icc():format(webp)/grow-dracaena-fragrans-indoors-1902748-hero-c66e2decaf404846b55e636127bfbc3d.jpg"
+    name: "Pepper,_bell",
+    scientificName: "Capsicum annuum",
+    image: "Plant_Label_Img/Pepper.jpg",
+    diseases: [
+      { name: 'Bacterial_spot', treatmentKey: 'Pepper,_bell___Bacterial_spot' },
+      { name: 'healthy', treatmentKey: 'healthy' }
+    ]
+  },
+  {
+    id: "7",
+    name: "Strawberry",
+    scientificName: "Fragaria × ananassa",
+    image: "Plant_Label_Img/Strawberry.jpg",
+    diseases: [
+      { name: 'Leaf_scorch', treatmentKey: 'Strawberry___Leaf_scorch' },
+      { name: 'healthy', treatmentKey: 'healthy' }
+    ]
+  },
+  {
+    id: "8",
+    name: "Peach",
+    scientificName: "Prunus persica",
+    image: "Plant_Label_Img/Peach.jpg",
+    diseases: [
+      { name: 'Bacterial_spot', treatmentKey: 'Peach___Bacterial_spot' },
+      { name: 'healthy', treatmentKey: 'healthy' }
+    ]
+  },
+  {
+    id: "9",
+    name: "Cherry_(including_sour)",
+    scientificName: "Prunus avium",
+    image: "Plant_Label_Img/Cherry.jpg",
+    diseases: [
+      { name: 'Powdery_mildew', treatmentKey: 'Cherry_(including_sour)___Powdery_mildew' },
+      { name: 'healthy', treatmentKey: 'healthy' }
+    ]
+  },
+  {
+    id: "10",
+    name: "Soybean",
+    scientificName: "Glycine max",
+    image: "Plant_Label_Img/Soybean.jpg",
+    diseases: [
+      { name: 'healthy', treatmentKey: 'healthy' }
+    ]
+  },
+  {
+    id: "11",
+    name: "Orange",
+    scientificName: "Citrus × sinensis",
+    image: "Plant_Label_Img/Orange.jpg",
+    diseases: [
+      { name: 'Haunglongbing_(Citrus_greening)', treatmentKey: 'Orange___Haunglongbing_(Citrus_greening)' }
+    ]
+  },
+  {
+    id: "12",
+    name: "Blueberry",
+    scientificName: "Vaccinium corymbosum",
+    image: "Plant_Label_Img/Blueberry.jpg",
+    diseases: [
+      { name: 'healthy', treatmentKey: 'healthy' }
+    ]
+  },
+  {
+    id: "13",
+    name: "Raspberry",
+    scientificName: "Rubus idaeus",
+    image: "Plant_Label_Img/Raspberry.jpg",
+    diseases: [
+      { name: 'healthy', treatmentKey: 'healthy' }
+    ]
+  },
+  {
+    id: "14",
+    name: "Squash",
+    scientificName: "Cucurbita",
+    image: "Plant_Label_Img/Squash.jpg",
+    diseases: [
+      { name: 'Powdery_mildew', treatmentKey: 'Squash___Powdery_mildew' }
+    ]
   }
 ]
 
@@ -59,6 +337,10 @@ export default function SearchScreen() {
   const [searchQuery, setSearchQuery] = useState("")
   const [plants, setPlants] = useState(PLANTS_DATA)
   const [loading, setLoading] = useState(false)
+  const [modalVisible, setModalVisible] = useState(false)
+  const [selectedPlant, setSelectedPlant] = useState(null)
+  const [treatmentModalVisible, setTreatmentModalVisible] = useState(false)
+  const [selectedDisease, setSelectedDisease] = useState(null)
 
   const filteredPlants = plants.filter(
     plant =>
@@ -66,13 +348,20 @@ export default function SearchScreen() {
       plant.scientificName.toLowerCase().includes(searchQuery.toLowerCase())
   )
 
+  const handlePlantPress = (plant) => {
+    setSelectedPlant(plant)
+    setModalVisible(true)
+  }
+
+  const handleDiseasePress = (disease) => {
+    setSelectedDisease(disease)
+    setTreatmentModalVisible(true)
+  }
+
   const renderPlantItem = ({ item }) => (
     <TouchableOpacity
       style={styles.plantCard}
-      onPress={() => {
-        // In a real app, navigate to plant details
-        console.log(`Selected plant: ${item.name}`)
-      }}
+      onPress={() => handlePlantPress(item)}
     >
       <Image
         source={{ uri: item.image }}
@@ -117,6 +406,78 @@ export default function SearchScreen() {
           }
         />
       )}
+
+      {/* Plant Diseases Modal */}
+      <Modal
+        animationType="slide"
+        transparent={true}
+        visible={modalVisible}
+        onRequestClose={() => setModalVisible(false)}
+      >
+        <View style={styles.modalContainer}>
+          <View style={styles.modalContent}>
+            {selectedPlant && (
+              <>
+                <Text style={styles.modalTitle}>{selectedPlant.name}</Text>
+                <Text style={styles.modalSubtitle}>Available Diseases:</Text>
+                <FlatList
+                  data={selectedPlant.diseases}
+                  renderItem={({ item }) => (
+                    <TouchableOpacity
+                      onPress={() => handleDiseasePress(item)}
+                    >
+                      <Text style={styles.diseaseItem}>• {item.name.replace(/_/g, ' ')}</Text>
+                    </TouchableOpacity>
+                  )}
+                  keyExtractor={(item, index) => index.toString()}
+                />
+                <TouchableOpacity
+                  style={styles.closeButton}
+                  onPress={() => setModalVisible(false)}
+                >
+                  <Text style={styles.closeButtonText}>Close</Text>
+                </TouchableOpacity>
+              </>
+            )}
+          </View>
+        </View>
+      </Modal>
+
+      {/* Disease Treatment Modal */}
+      <Modal
+        animationType="slide"
+        transparent={true}
+        visible={treatmentModalVisible}
+        onRequestClose={() => setTreatmentModalVisible(false)}
+      >
+        <View style={styles.modalContainer}>
+          <View style={styles.modalContent}>
+            {selectedDisease && (
+              <>
+                <Text style={styles.modalTitle}>{selectedDisease.name.replace(/_/g, ' ')}</Text>
+                <Text style={styles.modalSubtitle}>Treatment Steps:</Text>
+                {DISEASE_TREATMENTS[selectedDisease.treatmentKey] ? (
+                  <FlatList
+                    data={DISEASE_TREATMENTS[selectedDisease.treatmentKey]}
+                    renderItem={({ item, index }) => (
+                      <Text style={styles.treatmentItem}>{index + 1}. {item}</Text>
+                    )}
+                    keyExtractor={(item, index) => index.toString()}
+                  />
+                ) : (
+                  <Text style={styles.treatmentItem}>No specific treatment information available.</Text>
+                )}
+                <TouchableOpacity
+                  style={styles.closeButton}
+                  onPress={() => setTreatmentModalVisible(false)}
+                >
+                  <Text style={styles.closeButtonText}>Back to Diseases</Text>
+                </TouchableOpacity>
+              </>
+            )}
+          </View>
+        </View>
+      </Modal>
     </View>
   )
 }
@@ -178,5 +539,56 @@ const styles = StyleSheet.create({
   emptyText: {
     fontSize: 16,
     color: colors.textSecondary
+  },
+  modalContainer: {
+    flex: 1,
+    justifyContent: "center",
+    alignItems: "center",
+    backgroundColor: "rgba(0,0,0,0.5)"
+  },
+  modalContent: {
+    width: "80%",
+    backgroundColor: colors.cardBackground,
+    borderRadius: 12,
+    padding: 20,
+    maxHeight: "70%"
+  },
+  modalTitle: {
+    fontSize: 20,
+    fontWeight: "bold",
+    color: colors.textPrimary,
+    marginBottom: 10,
+    textAlign: "center"
+  },
+  modalSubtitle: {
+    fontSize: 16,
+    fontWeight: "bold",
+    color: colors.textPrimary,
+    marginBottom: 10
+  },
+  diseaseItem: {
+    fontSize: 14,
+    color: colors.textPrimary,
+    marginBottom: 5,
+    paddingLeft: 10
+  },
+  treatmentItem: {
+    fontSize: 14,
+    color: colors.textPrimary,
+    marginBottom: 8,
+    paddingLeft: 10,
+    paddingRight: 10,
+    lineHeight: 20
+  },
+  closeButton: {
+    backgroundColor: colors.primary,
+    padding: 12,
+    borderRadius: 8,
+    alignItems: "center",
+    marginTop: 15
+  },
+  closeButtonText: {
+    color: "#fff",
+    fontWeight: "bold"
   }
 })

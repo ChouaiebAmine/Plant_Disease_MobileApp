@@ -59,7 +59,7 @@ export default function MenuScreen() {
                 <Ionicons
                   name="log-out-outline"
                   size={24}
-                  color={colors.error} // Use error color for logout
+                  color={colors.error} 
                 />
                 <Text style={[styles.menuItemText, { color: colors.error }]}>Log Out</Text>
               </View>
@@ -105,43 +105,7 @@ export default function MenuScreen() {
             </TouchableOpacity>
           </>
         )}
-
-        {/* Keeping Notifications and Dark Mode for now, can be removed if not needed */}
-        <TouchableOpacity style={styles.menuItem}>
-          <View style={styles.menuItemLeft}>
-            <Ionicons
-              name="notifications-outline"
-              size={24}
-              color={colors.textPrimary}
-            />
-            <Text style={styles.menuItemText}>Notifications</Text>
-          </View>
-          <Switch
-            trackColor={{ false: colors.border, true: colors.primary }}
-            thumbColor={colors.textPrimary}
-            ios_backgroundColor={colors.border}
-            onValueChange={toggleNotifications}
-            value={notifications}
-          />
-        </TouchableOpacity>
-
-        <TouchableOpacity style={styles.menuItem}>
-          <View style={styles.menuItemLeft}>
-            <Ionicons
-              name="moon-outline"
-              size={24}
-              color={colors.textPrimary}
-            />
-            <Text style={styles.menuItemText}>Dark Mode</Text>
-          </View>
-          <Switch
-            trackColor={{ false: colors.border, true: colors.primary }}
-            thumbColor={colors.textPrimary}
-            ios_backgroundColor={colors.border}
-            onValueChange={toggleDarkMode}
-            value={darkMode}
-          />
-        </TouchableOpacity>
+        
       </View>
 
       <View style={styles.section}>
