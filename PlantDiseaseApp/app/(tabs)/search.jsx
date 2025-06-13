@@ -12,6 +12,20 @@ import {
 } from "react-native"
 import colors from "../theme/colors"
 
+const tomatoImage = require("../../public/Plant_Label_Img/Tomato.jpg");
+const appleImage = require("../../public/Plant_Label_Img/Apple.jpg");
+const cornImage = require("../../public/Plant_Label_Img/Corn.jpg");
+const grapeImage = require("../../public/Plant_Label_Img/Grape.jpg");
+const potatoImage = require("../../public/Plant_Label_Img/Potato.jpg");
+const pepperImage = require("../../public/Plant_Label_Img/Pepper.jpg");
+const strawberryImage = require("../../public/Plant_Label_Img/Strawberry.jpg");
+const peachImage = require("../../public/Plant_Label_Img/Peach.jpg");
+const cherryImage = require("../../public/Plant_Label_Img/Cherry.jpg");
+const soybeanImage = require("../../public/Plant_Label_Img/SoyBean.jpg");
+const orangeImage = require("../../public/Plant_Label_Img/Orange.jpg");
+const blueberryImage = require("../../public/Plant_Label_Img/BlueBerry.jpg");
+const raspberryImage = require("../../public/Plant_Label_Img/Raspberry.jpg");
+const squashImage = require("../../public/Plant_Label_Img/Squash.jpg");
 
 //treatments
 const DISEASE_TREATMENTS = {
@@ -185,7 +199,7 @@ const PLANTS_DATA = [
     id: "1",
     name: "Tomato",
     scientificName: "Solanum lycopersicum",
-    image: "Plant_Label_Img/Tomato.jpg",
+    image: tomatoImage,
     diseases: [
       { name: 'Bacterial_spot', treatmentKey: 'Tomato___Bacterial_spot' },
       { name: 'Early_blight', treatmentKey: 'Tomato___Early_blight' },
@@ -203,7 +217,7 @@ const PLANTS_DATA = [
     id: "2",
     name: "Apple",
     scientificName: "Malus domestica",
-    image: "/Plant_Label_Img/Apple.jpg",
+    image: appleImage,
     diseases: [
       { name: 'Apple_scab', treatmentKey: 'Apple___Apple_scab' },
       { name: 'Black_rot', treatmentKey: 'Apple___Black_rot' },
@@ -215,7 +229,7 @@ const PLANTS_DATA = [
     id: "3",
     name: "Corn_(maize)",
     scientificName: "Zea mays",
-    image: "Plant_Label_Img/Corn.jpg",
+    image: cornImage,
     diseases: [
       { name: 'Cercospora_leaf_spot Gray_leaf_spot', treatmentKey: 'Corn_(maize)___Cercospora_leaf_spot Gray_leaf_spot' },
       { name: 'Common_rust_', treatmentKey: 'Corn_(maize)___Common_rust_' },
@@ -227,7 +241,7 @@ const PLANTS_DATA = [
     id: "4",
     name: "Grape",
     scientificName: "Vitis vinifera",
-    image: "Plant_Label_Img/Grape.jpg",
+    image: grapeImage,
     diseases: [
       { name: 'Black_rot', treatmentKey: 'Grape___Black_rot' },
       { name: 'Esca_(Black_Measles)', treatmentKey: 'Grape___Esca_(Black_Measles)' },
@@ -239,7 +253,7 @@ const PLANTS_DATA = [
     id: "5",
     name: "Potato",
     scientificName: "Solanum tuberosum",
-    image: "Plant_Label_Img/Potato.jpg",
+    image: potatoImage,
     diseases: [
       { name: 'Early_blight', treatmentKey: 'Potato___Early_blight' },
       { name: 'Late_blight', treatmentKey: 'Potato___Late_blight' },
@@ -250,7 +264,7 @@ const PLANTS_DATA = [
     id: "6",
     name: "Pepper,_bell",
     scientificName: "Capsicum annuum",
-    image: "Plant_Label_Img/Pepper.jpg",
+    image: pepperImage,
     diseases: [
       { name: 'Bacterial_spot', treatmentKey: 'Pepper,_bell___Bacterial_spot' },
       { name: 'healthy', treatmentKey: 'healthy' }
@@ -260,7 +274,7 @@ const PLANTS_DATA = [
     id: "7",
     name: "Strawberry",
     scientificName: "Fragaria × ananassa",
-    image: "Plant_Label_Img/Strawberry.jpg",
+    image: strawberryImage,
     diseases: [
       { name: 'Leaf_scorch', treatmentKey: 'Strawberry___Leaf_scorch' },
       { name: 'healthy', treatmentKey: 'healthy' }
@@ -270,7 +284,7 @@ const PLANTS_DATA = [
     id: "8",
     name: "Peach",
     scientificName: "Prunus persica",
-    image: "Plant_Label_Img/Peach.jpg",
+    image: peachImage,
     diseases: [
       { name: 'Bacterial_spot', treatmentKey: 'Peach___Bacterial_spot' },
       { name: 'healthy', treatmentKey: 'healthy' }
@@ -280,7 +294,7 @@ const PLANTS_DATA = [
     id: "9",
     name: "Cherry_(including_sour)",
     scientificName: "Prunus avium",
-    image: "Plant_Label_Img/Cherry.jpg",
+    image: cherryImage,
     diseases: [
       { name: 'Powdery_mildew', treatmentKey: 'Cherry_(including_sour)___Powdery_mildew' },
       { name: 'healthy', treatmentKey: 'healthy' }
@@ -290,7 +304,7 @@ const PLANTS_DATA = [
     id: "10",
     name: "Soybean",
     scientificName: "Glycine max",
-    image: "Plant_Label_Img/Soybean.jpg",
+    image: soybeanImage,
     diseases: [
       { name: 'healthy', treatmentKey: 'healthy' }
     ]
@@ -299,7 +313,7 @@ const PLANTS_DATA = [
     id: "11",
     name: "Orange",
     scientificName: "Citrus × sinensis",
-    image: "Plant_Label_Img/Orange.jpg",
+    image: orangeImage,
     diseases: [
       { name: 'Haunglongbing_(Citrus_greening)', treatmentKey: 'Orange___Haunglongbing_(Citrus_greening)' }
     ]
@@ -308,7 +322,7 @@ const PLANTS_DATA = [
     id: "12",
     name: "Blueberry",
     scientificName: "Vaccinium corymbosum",
-    image: "Plant_Label_Img/Blueberry.jpg",
+    image: blueberryImage,
     diseases: [
       { name: 'healthy', treatmentKey: 'healthy' }
     ]
@@ -317,7 +331,7 @@ const PLANTS_DATA = [
     id: "13",
     name: "Raspberry",
     scientificName: "Rubus idaeus",
-    image: "Plant_Label_Img/Raspberry.jpg",
+    image: raspberryImage,
     diseases: [
       { name: 'healthy', treatmentKey: 'healthy' }
     ]
@@ -326,7 +340,7 @@ const PLANTS_DATA = [
     id: "14",
     name: "Squash",
     scientificName: "Cucurbita",
-    image: "Plant_Label_Img/Squash.jpg",
+    image: squashImage,
     diseases: [
       { name: 'Powdery_mildew', treatmentKey: 'Squash___Powdery_mildew' }
     ]
@@ -364,7 +378,7 @@ export default function SearchScreen() {
       onPress={() => handlePlantPress(item)}
     >
       <Image
-        source={{ uri: item.image }}
+        source={item.image}
         style={styles.plantImage}
         resizeMode="cover"
       />
@@ -407,7 +421,7 @@ export default function SearchScreen() {
         />
       )}
 
-      {/* Plant Diseases Modal */}
+
       <Modal
         animationType="slide"
         transparent={true}
