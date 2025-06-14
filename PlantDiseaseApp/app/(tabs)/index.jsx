@@ -50,42 +50,42 @@ export default function MyPlantsScreen() {
     loadHistory();
   }, [userToken, loadHistory]);
 
-  const handleClearHistory = async () => {
-    if (!userToken) {
-      Alert.alert("Login Required", "You must be logged in to clear history.");
-      return;
-    }
-    Alert.alert(
-      "Clear History",
-      "Are you sure you want to delete all your diagnosis history? This cannot be undone.",
-      [
-        { text: "Cancel", style: "cancel" },
-        {
-          text: "Clear All",
-          onPress: async () => {
-            try {
-              setLoading(true);
+  // const handleClearHistory = async () => {
+  //   if (!userToken) {
+  //     Alert.alert("Login Required", "You must be logged in to clear history.");
+  //     return;
+  //   }
+  //   Alert.alert(
+  //     "Clear History",
+  //     "Are you sure you want to delete all your diagnosis history? This cannot be undone.",
+  //     [
+  //       { text: "Cancel", style: "cancel" },
+  //       {
+  //         text: "Clear All",
+  //         onPress: async () => {
+  //           try {
+  //             setLoading(true);
 
-              // for now, let's simulate or comment out until backend endpoint is ready
-              // await apiService.clearUserDiagnoses(); 
-              // For demonstration, we'll just clear it locally and log a message
-              console.warn("Backend endpoint for clearing user-specific history not yet implemented. Clearing locally for now.");
-              setDiagnosisHistory([]);
-              Alert.alert("Success", "Diagnosis history cleared (locally for now).");
-              // After implementing backend: Alert.alert("Success", "Diagnosis history cleared.");
-            } catch (e) {
-              console.error("Failed to clear history:", e);
-              Alert.alert("Error", e.message || "Failed to clear diagnosis history.");
-            } finally {
-              setLoading(false);
-            }
-          },
-          style: "destructive",
-        },
-      ],
-      { cancelable: true }
-    );
-  };
+  //             // for now, let's simulate or comment out until backend endpoint is ready
+  //             // await apiService.clearUserDiagnoses(); 
+  //             // For demonstration, we'll just clear it locally and log a message
+  //             console.warn("Backend endpoint for clearing user-specific history not yet implemented. Clearing locally for now.");
+  //             setDiagnosisHistory([]);
+  //             Alert.alert("Success", "Diagnosis history cleared (locally for now).");
+  //             // After implementing backend: Alert.alert("Success", "Diagnosis history cleared.");
+  //           } catch (e) {
+  //             console.error("Failed to clear history:", e);
+  //             Alert.alert("Error", e.message || "Failed to clear diagnosis history.");
+  //           } finally {
+  //             setLoading(false);
+  //           }
+  //         },
+  //         style: "destructive",
+  //       },
+  //     ],
+  //     { cancelable: true }
+  //   );
+  // };
 
   const formatDate = (isoString) => {
     if (!isoString) return "N/A";
@@ -97,9 +97,8 @@ export default function MyPlantsScreen() {
   };
 
   const navigateToNewDiagnosis = () => {
-    // Navigate to the screen where user can start diagnosis
-    // This could be the camera screen or an initial diagnosis options screen
-    router.push("/screens/diagnosis-result"); // Assuming camera is the starting point for new diagnosis
+  
+    router.push("/screens/diagnosis-result"); 
   };
   
   const navigateToLogin = () => {
@@ -164,11 +163,7 @@ export default function MyPlantsScreen() {
       <View style={styles.header}>
         <Text style={styles.headerTitle}>Diagnosis History</Text>
         <View style={styles.headerButtons}>
-          {userToken && diagnosisHistory.length > 0 && (
-            <TouchableOpacity style={styles.clearButton} onPress={handleClearHistory}>
-              <Text style={styles.clearButtonText}>Clear</Text>
-            </TouchableOpacity>
-          )}
+          
           <TouchableOpacity style={styles.addButton} onPress={navigateToNewDiagnosis}>
             <Text style={styles.addButtonText}>+ New</Text>
           </TouchableOpacity>

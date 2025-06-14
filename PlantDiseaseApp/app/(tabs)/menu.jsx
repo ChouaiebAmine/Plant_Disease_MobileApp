@@ -27,7 +27,7 @@ export default function MenuScreen() {
     try {
       await signOut();
       Alert.alert("Logged Out", "You have been successfully logged out.");
-      router.replace("/(tabs)/menu"); 
+      router.replace("/LoginScreen");
     } catch (error) {
       Alert.alert("Logout Failed", "An error occurred while logging out.");
       console.error("Logout error:", error);
@@ -225,4 +225,5 @@ const styles = StyleSheet.create({
   },
   
 });
+
 

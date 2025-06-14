@@ -8,18 +8,20 @@ export const AuthProvider = ({ children }) => {
   const [userToken, setUserToken] = useState(null);
   const [isLoading, setIsLoading] = useState(true);
   const [userData, setUserData] = useState(null); 
+
   useEffect(() => {
     const bootstrapAsync = async () => {
       let token;
       try {
         token = await storageService.getToken();
+        if (token) {
+          setUserToken(token);
+        }
       } catch (e) {
-        // Restoring token failed
         console.error("Restoring token failed", e);
+      } finally {
+        setIsLoading(false);
       }
-      setUserToken(token);
-      // If you store user data, you might fetch it here if token exists
-      setIsLoading(false);
     };
 
     bootstrapAsync();
@@ -32,13 +34,13 @@ export const AuthProvider = ({ children }) => {
         if (data.token) {
           await storageService.saveToken(data.token);
           setUserToken(data.token);
-          // Optionally fetch and set user data here
+          setUserData({ email: email });
         } else {
           throw new Error("Login failed: No token received");
         }
       } catch (error) {
         console.error("Sign in error:", error);
-        throw error; // Re-throw to be caught by UI
+        throw error; 
       }
     },
     signUp: async (email, password) => {
@@ -47,13 +49,14 @@ export const AuthProvider = ({ children }) => {
         if (data.token) {
           await storageService.saveToken(data.token);
           setUserToken(data.token);
-          // Optionally fetch and set user data here
+       
+          setUserData({ email: email }); 
         } else {
           throw new Error("Sign up failed: No token received");
         }
       } catch (error) {
         console.error("Sign up error:", error);
-        throw error; // Re-throw to be caught by UI
+        throw error; 
       }
     },
     signOut: async () => {
@@ -65,8 +68,8 @@ export const AuthProvider = ({ children }) => {
         console.error("Sign out error:", error);
       }
     },
+    user: userData, 
     userToken,
-    userData,
     isLoading,
   };
 
@@ -76,4 +79,5 @@ export const AuthProvider = ({ children }) => {
 };
 
 export const useAuth = () => useContext(AuthContext);
+
 

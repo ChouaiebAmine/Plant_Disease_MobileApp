@@ -1,6 +1,6 @@
 import axios from "axios";
 
-const API_BASE_URL = process.env.EXPO_PUBLIC_API_URL || "http://localhost:5000/api"; 
+const API_BASE_URL = process.env.EXPO_PUBLIC_API_URL || "http://192.168.1.181:5000/api"; 
 
 console.log("Using API Base URL:", API_BASE_URL);
 
@@ -12,11 +12,11 @@ const apiClient = axios.create({
   }
 });
 
-// Add authorization header interceptor
+
 apiClient.interceptors.request.use(
   async (config) => {
     try {
-      // Import here to avoid circular dependency
+
       const storageService = require('./storageService').default;
       const token = await storageService.getToken();
       if (token) {
@@ -53,7 +53,6 @@ const apiService = {
     }
   },
 
-  // --- Disease Detection --- 
   detectDisease: async (imageUri) => {
     try {
       let base64Image = imageUri;
@@ -90,7 +89,7 @@ const apiService = {
     }
   },
 
-  // --- Diagnosis History API Calls ---
+
 
   //save Diagnosis result to the backend
   saveDiagnosis: async (diagnosisData) => {
@@ -124,7 +123,7 @@ const apiService = {
     }
   },
   
-  // Alias for getDiagnosisHistory - used by Diagnosis History screen
+
   getUserDiagnoses: async () => {
     try {
       console.log("Fetching user diagnoses from:", `${API_BASE_URL}/diagnoses`);
@@ -140,9 +139,9 @@ const apiService = {
     }
   },
 
-  // --- End Diagnosis History API Calls ---
 
-  // Get all plants 
+
+
   getPlants: async () => {
     try {
       const response = await apiClient.get(`/plants`);
