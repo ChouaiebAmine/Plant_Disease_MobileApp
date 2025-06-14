@@ -14,14 +14,14 @@ import * as ImagePicker from "expo-image-picker";
 import colors from "../theme/colors";
 import apiService from "../services/apiService";
 import storageService from "../services/storageService"; // Import storage service
+// import * as FileSystem from 'expo-file-system'; // No longer needed if base64 is directly obtained
 
 /*
 import { decodeJpeg, bundleResourceIO } from '@tensorflow/tfjs-react-native';
-import * as tf from '@tensorflow/tfjs';
+import *s tf from '@tensorflow/tfjs';
 import { fetch as tfFetch } from '@tensorflow/tfjs-react-native';
 import { loadTFLiteModel } from '@tensorflow/tfjs-tflite';
 import * as ImageManipulator from 'expo-image-manipulator';
-import * as FileSystem from 'expo-file-system';
 import { Asset } from 'expo-asset';
 */
 export default function DiagnosisResultScreen() {
@@ -49,11 +49,12 @@ export default function DiagnosisResultScreen() {
         allowsEditing: true,
         aspect: [4, 3],
         quality: 1,
+        base64: true, // Request base64 directly
       });
 
       if (!result.canceled) {
         setImageUri(result.assets[0].uri);
-        processImage(result.assets[0].uri);
+        processImage(result.assets[0].base64); // Pass base64 directly
       }
     } catch (error) {
       console.error("Error taking picture:", error);
@@ -78,11 +79,12 @@ export default function DiagnosisResultScreen() {
         allowsEditing: true,
         aspect: [4, 3],
         quality: 1,
+        base64: true, // Request base64 directly
       });
 
       if (!result.canceled) {
         setImageUri(result.assets[0].uri);
-        processImage(result.assets[0].uri);
+        processImage(result.assets[0].base64); // Pass base64 directly
       }
     } catch (error) {
       console.error("Error picking image:", error);
@@ -90,8 +92,8 @@ export default function DiagnosisResultScreen() {
     }
   };
 
-  const processImage = async (uri) => {
-    if (!uri) return; 
+  const processImage = async (base64Data) => {
+    if (!base64Data) return; 
     let apiSucceeded = false; 
     try {
       setLoading(true);
@@ -99,8 +101,12 @@ export default function DiagnosisResultScreen() {
       setResult(null); 
       setIsSaved(false);
 
+      // Prepend the data URI scheme if it's not already there
+      const fullBase64Image = base64Data.startsWith("data:image") 
+        ? base64Data 
+        : `data:image/jpeg;base64,${base64Data}`;
       
-      const detectionData = await apiService.detectDisease(uri);
+      const detectionData = await apiService.detectDisease(fullBase64Image);
       apiSucceeded = true; // debug call
 
       //response matches UI
@@ -134,7 +140,6 @@ export default function DiagnosisResultScreen() {
     }
   };
 
-  // --- handle saving the diagnosis ---
   const handleSaveDiagnosis = async () => {
     if (!result || isSaved) return // Don't save if no result or already saved
 
@@ -521,3 +526,5 @@ const styles = StyleSheet.create({
     fontSize: 16,
   },
 });
+
+
